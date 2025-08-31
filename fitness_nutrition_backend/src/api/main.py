@@ -20,6 +20,7 @@ def create_app() -> FastAPI:
         {"name": "subscriptions", "description": "Subscription plans and billing"},
         {"name": "reports", "description": "Reporting and analytics"},
         {"name": "notifications", "description": "Notifications and alerts"},
+        {"name": "protocols", "description": "Protocol goals and progress tracking"},
     ]
     app = FastAPI(
         title=settings.APP_NAME,

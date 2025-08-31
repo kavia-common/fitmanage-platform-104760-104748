@@ -4,6 +4,12 @@ from .workout import WorkoutPlanCreate, WorkoutPlanRead
 from .diet import DietPlanCreate, DietPlanRead
 from .subscription import SubscriptionRead
 from .notification import NotificationRead
+from .protocols import (
+    ProtocolGoalCreate,
+    ProtocolGoalRead,
+    GoalProgressCreate,
+    GoalProgressRead,
+)
 
 __all__ = [
     "UserCreate",
@@ -18,4 +24,8 @@ __all__ = [
     "DietPlanRead",
     "SubscriptionRead",
     "NotificationRead",
+    "ProtocolGoalCreate",
+    "ProtocolGoalRead",
+    "GoalProgressCreate",
+    "GoalProgressRead",
 ]
