@@ -6,6 +6,7 @@ from src.core.database import get_db
 from src.core.security import get_current_user
 from src.models import WorkoutPlan, User
 from src.schemas.workout import WorkoutPlanCreate, WorkoutPlanRead
+from src.services.subscriptions import ensure_within_limits_workout_plans
 
 router = APIRouter()
 
@@ -52,6 +53,9 @@ def create_workout(
     """Create a workout plan after verifying client ownership."""
     # Ensure ownership
     assert_client_ownership_or_admin(db, payload.client_id, current, "Cannot create plan for this client")
+    # Enforce per-plan limits if the client belongs to the current user (non-admin/pro)
+    ensure_within_limits_workout_plans(db, current.id, payload.client_id)
+
     obj = WorkoutPlan(
         client_id=payload.client_id,
         title=payload.title,

@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, PlainTextResponse
 
 from src.api.router import api_router
 from src.core.config import get_settings
@@ -21,6 +21,7 @@ def create_app() -> FastAPI:
         {"name": "reports", "description": "Reporting and analytics"},
         {"name": "notifications", "description": "Notifications and alerts"},
         {"name": "protocols", "description": "Protocol goals and progress tracking"},
+        {"name": "websocket", "description": "WebSocket real-time connections and usage help"},
     ]
     app = FastAPI(
         title=settings.APP_NAME,
@@ -44,6 +45,22 @@ def create_app() -> FastAPI:
     @app.get("/", summary="Health Check", tags=["health"])
     def health_check():
         return JSONResponse({"message": "Healthy", "env": settings.ENV})
+
+    # WebSocket usage help
+    @app.get(
+        "/api/ws-help",
+        summary="WebSocket usage",
+        tags=["websocket"],
+        response_class=PlainTextResponse,
+        description="WebSocket usage help: connect to /api/notifications/ws?token=<JWT> to receive real-time notifications.",
+    )
+    def websocket_help():
+        return (
+            "WebSocket usage:\n"
+            "- Connect to: /api/notifications/ws?token=<JWT>\n"
+            "- Protocol: JSON messages {\"type\":\"notification\",\"payload\":{...}}\n"
+            "- Auth: provide a valid bearer token in the 'token' query parameter.\n"
+        )
 
     # Include API router under /api
     app.include_router(api_router, prefix="/api")

@@ -6,6 +6,7 @@ from src.core.database import get_db
 from src.core.security import get_current_user
 from src.models import Client, User
 from src.schemas.client import ClientCreate, ClientRead
+from src.services.subscriptions import ensure_within_limits_clients
 
 router = APIRouter()
 
@@ -50,6 +51,10 @@ def create_client(
     """Create a client with ownership/role validation."""
     role_names = {r.name for r in (current.roles or [])}
     is_admin_or_pro = "admin" in role_names or "professional" in role_names
+
+    # For regular users, enforce plan limits
+    if not is_admin_or_pro:
+        ensure_within_limits_clients(db, current)
 
     # For regular users, force client to be associated to themselves
     user_id = current.id if not is_admin_or_pro else getattr(payload, "user_id", None) or current.id

@@ -6,6 +6,7 @@ from src.core.database import get_db
 from src.core.security import get_current_user
 from src.models import DietPlan, User
 from src.schemas.diet import DietPlanCreate, DietPlanRead
+from src.services.subscriptions import ensure_within_limits_diet_plans
 
 router = APIRouter()
 
@@ -50,6 +51,7 @@ def create_diet_plan(
 ):
     """Create a diet plan after verifying client ownership."""
     assert_client_ownership_or_admin(db, payload.client_id, current, "Cannot create plan for this client")
+    ensure_within_limits_diet_plans(db, current.id, payload.client_id)
     obj = DietPlan(
         client_id=payload.client_id,
         title=payload.title,
