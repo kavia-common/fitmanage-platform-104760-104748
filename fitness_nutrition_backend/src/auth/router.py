@@ -12,7 +12,12 @@ router = APIRouter()
 
 
 # PUBLIC_INTERFACE
-@router.post("/login", response_model=Token, summary="Login")
+@router.post(
+    "/login",
+    response_model=Token,
+    summary="Login",
+    description="Authenticate a user and return a JWT access token. Use the token as 'Authorization: Bearer <token>' in subsequent requests.",
+)
 def login(payload: UserLogin, db: Session = Depends(get_db)):
     """Authenticate a user and return a JWT access token."""
     user = db.query(User).filter(User.email == payload.email).first()
@@ -24,7 +29,7 @@ def login(payload: UserLogin, db: Session = Depends(get_db)):
 
 
 # PUBLIC_INTERFACE
-@router.post("/register", response_model=UserRead, summary="Register")
+@router.post("/register", response_model=UserRead, summary="Register", description="Register a new user with default 'user' role.")
 def register(payload: UserCreate, db: Session = Depends(get_db)):
     """Register a new user with default 'user' role."""
     exists = db.query(User).filter(User.email == payload.email).first()

@@ -10,15 +10,27 @@ from src.core.database import Base, engine
 def create_app() -> FastAPI:
     """Create and configure the FastAPI app instance with routers and middleware."""
     settings = get_settings()
+    openapi_tags = [
+        {"name": "health", "description": "Service health and diagnostics"},
+        {"name": "auth", "description": "Authentication endpoints (register, login)"},
+        {"name": "users", "description": "Users management (requires authentication)"},
+        {"name": "workouts", "description": "Workout plans and logs"},
+        {"name": "diet", "description": "Diet plans and entries"},
+        {"name": "clients", "description": "Client management for professionals"},
+        {"name": "subscriptions", "description": "Subscription plans and billing"},
+        {"name": "reports", "description": "Reporting and analytics"},
+        {"name": "notifications", "description": "Notifications and alerts"},
+    ]
     app = FastAPI(
         title=settings.APP_NAME,
-        description=settings.APP_DESCRIPTION,
+        description=settings.APP_DESCRIPTION + "\n\nNote: Use the 'Authorize' button with a Bearer token obtained from POST /api/auth/login.",
         version=settings.APP_VERSION,
         contact={"name": "API Support"},
         docs_url="/docs",
         redoc_url="/redoc",
         openapi_url="/openapi.json",
         swagger_ui_parameters={"defaultModelsExpandDepth": -1},
+        openapi_tags=openapi_tags,
     )
 
     # Middleware
