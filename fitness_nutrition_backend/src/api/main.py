@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse
 from src.api.router import api_router
 from src.core.config import get_settings
 from src.core.dependencies import setup_cors
+from src.core.database import Base, engine
 
 
 def create_app() -> FastAPI:
@@ -22,6 +23,9 @@ def create_app() -> FastAPI:
 
     # Middleware
     setup_cors(app)
+
+    # Create tables if they do not exist yet (Alembic recommended for production)
+    Base.metadata.create_all(bind=engine)
 
     # Root health check
     @app.get("/", summary="Health Check", tags=["health"])

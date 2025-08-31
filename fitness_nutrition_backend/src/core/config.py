@@ -1,5 +1,5 @@
 from functools import lru_cache
-from typing import List
+from typing import List, Optional
 
 from pydantic import AnyHttpUrl, Field
 from pydantic_settings import BaseSettings
@@ -26,10 +26,19 @@ class Settings(BaseSettings):
         description="Allowed origins for CORS."
     )
 
-    # Security (placeholders for future JWT implementation)
+    # Security / JWT
     SECRET_KEY: str = Field(default="change-me-in-env", description="Secret key for cryptographic operations.")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(default=60 * 24, description="JWT access token expiry in minutes.")
     ALGORITHM: str = Field(default="HS256", description="JWT signing algorithm.")
+    JWT_ISSUER: Optional[str] = Field(default=None, description="JWT issuer claim (iss).")
+    JWT_AUDIENCE: Optional[str] = Field(default=None, description="JWT audience claim (aud).")
+
+    # Database
+    DATABASE_URL: str = Field(
+        default="sqlite:///./app.db",
+        description="SQLAlchemy database URL, e.g., postgres://user:pass@host:port/db"
+    )
+    SQL_ECHO: bool = Field(default=False, description="Enable SQLAlchemy engine echo for debugging.")
 
     # WebSocket base path (for future use)
     WEBSOCKET_BASE_PATH: str = Field(default="/ws", description="Base path for websocket endpoints.")
