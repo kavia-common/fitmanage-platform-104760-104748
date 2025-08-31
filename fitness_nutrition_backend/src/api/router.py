@@ -9,6 +9,7 @@ from src.subscriptions.router import router as subscriptions_router
 from src.reports.router import router as reports_router
 from src.notifications.router import router as notifications_router
 from src.protocols.router import router as protocols_router
+from src.settings.router import router as settings_router
 
 api_router = APIRouter()
 
@@ -27,3 +28,4 @@ api_router.include_router(protocols_router, prefix="/protocols", tags=["protocol
 api_router.include_router(subscriptions_router, prefix="/subscriptions", tags=["subscriptions"])
 api_router.include_router(reports_router, prefix="/reports", tags=["reports"])
 api_router.include_router(notifications_router, prefix="/notifications", tags=["notifications"])
+api_router.include_router(settings_router, prefix="/settings", tags=["settings"])
